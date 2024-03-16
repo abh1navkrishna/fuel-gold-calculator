@@ -18,6 +18,8 @@ class _Gold_PriceState extends State<Gold_Price> {
   String calculationMethod = 'gram';
   double estimatedValue = 0.0;
   double makingcharge = 0.0;
+  double gstPercentage = 0;
+
 
   @override
   Widget build(BuildContext context) {
@@ -150,6 +152,26 @@ class _Gold_PriceState extends State<Gold_Price> {
                 ),
               ],
             ),
+            SizedBox(height: 20.h,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                AppText(
+                    text: 'GST (CGST + SGST)',
+                    size: 15,
+                    weight: FontWeight.w500,
+                    textcolor: Colors.black),
+                AppTextForm(
+                  focusColor: Colors.orange,
+                  enableColor: Colors.yellow,
+                  onChanged: (value) {
+                    setState(() {
+                      gstPercentage = double.tryParse(value) ?? 0;
+                    });
+                  },
+                ),
+              ],
+            ),
             SizedBox(
               height: 20.h,
             ),
@@ -172,14 +194,15 @@ class _Gold_PriceState extends State<Gold_Price> {
                 InkWell(
                     onTap: () {
                       setState(() {
-                        estimatedValue = calculationMethod == 'gram'
-                            ? goldWeight *
-                                (goldPurity / 24) *
-                                goldPrice +(makingcharge*goldWeight)
-                            : (goldWeight * 31.1035) *
-                                (goldPurity / 24) *
-                                goldPrice +(makingcharge*goldWeight);
+                        if (calculationMethod == 'gram') {
+                          estimatedValue = goldWeight * (goldPurity / 24) * goldPrice+(makingcharge*goldWeight);
+                        } else {
+                          estimatedValue = goldWeight * (goldPurity / 24) * goldPrice * 31.1035+(makingcharge*goldWeight);
+                        }
+                        estimatedValue *= (1 + gstPercentage / 100);
                       });
+
+
                     },
                     child: AppContainer(text: "Calculate")),
               ],
