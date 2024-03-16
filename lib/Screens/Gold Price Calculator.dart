@@ -17,6 +17,7 @@ class _Gold_PriceState extends State<Gold_Price> {
   double goldPrice = 0.0;
   String calculationMethod = 'gram';
   double estimatedValue = 0.0;
+  double makingcharge = 0.0;
 
   @override
   Widget build(BuildContext context) {
@@ -130,6 +131,28 @@ class _Gold_PriceState extends State<Gold_Price> {
             SizedBox(
               height: 20.h,
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                AppText(
+                    text: 'Making Charge',
+                    size: 15,
+                    weight: FontWeight.w500,
+                    textcolor: Colors.black),
+                AppTextForm(
+                  focusColor: Colors.orange,
+                  enableColor: Colors.yellow,
+                  onChanged: (value) {
+                    setState(() {
+                      makingcharge = double.parse(value);
+                    });
+                  },
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 20.h,
+            ),
             Column(
               children: [
                 AppText(
@@ -150,10 +173,12 @@ class _Gold_PriceState extends State<Gold_Price> {
                     onTap: () {
                       setState(() {
                         estimatedValue = calculationMethod == 'gram'
-                            ? goldWeight * (goldPurity / 24) * goldPrice
+                            ? goldWeight *
+                                (goldPurity / 24) *
+                                goldPrice +(makingcharge*goldWeight)
                             : (goldWeight * 31.1035) *
                                 (goldPurity / 24) *
-                                goldPrice;
+                                goldPrice +(makingcharge*goldWeight);
                       });
                     },
                     child: AppContainer(text: "Calculate")),
